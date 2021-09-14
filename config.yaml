@@ -1,0 +1,44 @@
+version: "v1.0.1"
+name: "pink"
+# 分为dev模式与release模式
+mode: "dev"
+port: 8080
+start_time: "2006-01-02"
+machine_id: 1
+# 每几秒钟放多少令牌
+rate_limit_time: 1
+rate_limit_num: 10000
+
+auth:
+  # 一年时间
+  jwt_expire: 8760
+
+log:
+  level: "debug"
+  filename: "pink.log"
+  max_size: 200
+  max_age: 30
+  max_backups: 7
+
+mysql:
+  host: "127.0.0.1"
+  port: 3306
+  user: "root"
+  password: "123456"
+  dbname: "pink"
+  max_open_conns: 100
+  max_idle_conns: 10
+
+redis:
+  host: "127.0.0.1"
+  port: 6379
+  password: ""
+  db: 0
+  pool_size: 200
+
+oss:
+  endpoint: "oss-cn-shanghai.aliyuncs.com"
+  access_key_id: "LTAIOMvPwf7V3QRT"
+  access_key_secret: "nKAwGDBsC5m9k1lKdoTz6ILq7zOrmP"
+  bucket_name: "otakusns"
+  bucket_point: "https://img.catacg.cn"
