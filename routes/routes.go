@@ -32,19 +32,37 @@ func Setup(mode string) *gin.Engine {
 	v1.POST("/signup", controller.SignUpHandler)
 	v1.POST("/login", controller.LoginHandler)
 
+	// 版本更新
+	v1.GET("/update", controller.UpdateHandle)
+
 	// 应用JWT认证中间件
 	v1.Use(middlewares.JWTAuthMiddleware())
 	{
+		// 分类
 		v1.GET("/categoryList", controller.CategoryListHandle)
+
+		// 文章
 		v1.GET("/postList", controller.PostCategoryListHandle)
+		v1.POST("/post", controller.PostPublishHandle)
 		v1.GET("/post/:id", controller.PostByIdHandle)
+
+		// 首页
 		v1.GET("/home", controller.HomeHandle)
+
+		// 用户
 		v1.GET("/user/:id", controller.UserHandle)
 		v1.GET("/profile", controller.ProfileHandle)
-		v1.GET("/ranking", controller.RankingHandle)
-		v1.GET("/search", controller.SearchHandle)
-	}
 
+		// 排行
+		v1.GET("/ranking", controller.RankingHandle)
+
+		// 搜索
+		v1.GET("/search", controller.SearchHandle)
+
+		// 上传
+		v1.POST("/upload", controller.UploadHandle)
+
+	}
 	r.GET("/", func(context *gin.Context) {
 		context.JSON(http.StatusOK, map[string]interface{}{
 			"msg": "OK",

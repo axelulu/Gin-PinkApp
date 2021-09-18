@@ -73,6 +73,37 @@ func PostByIdHandle(c *gin.Context) {
 	ResponseSuccess(c, post)
 }
 
+func PostPublishHandle(c *gin.Context) {
+	p := new(models.PostPublish)
+	if err := c.ShouldBindJSON(&p); err != nil {
+		// 记录日志
+		zap.L().Error("PostCategoryListHandle with invalid param", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			ResponseError(c, CodeInvalidParam)
+			return
+		}
+		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
+		return
+	}
+
+	authorId, err := getCurrentUserID(c)
+	if err != nil {
+		// 记录日志
+		zap.L().Error("getCurrentUserID err", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+
+	exec, err := logic.PostPublish(p, authorId)
+	if err != nil {
+		zap.L().Error("logic.PostPublish failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, exec)
+}
+
 func RankingHandle(c *gin.Context) {
 	// 1. 获取参数
 	p := new(models.PostRankingList)

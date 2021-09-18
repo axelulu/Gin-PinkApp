@@ -11,7 +11,7 @@ import (
 func CategoryListHandle(c *gin.Context) {
 	//参数校验
 	p := new(models.CategoryList)
-	if err := c.ShouldBindJSON(&p); err != nil {
+	if err := c.ShouldBindQuery(&p); err != nil {
 		// 记录日志
 		zap.L().Error("SignUp with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)

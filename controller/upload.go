@@ -1,21 +1,21 @@
-package oss
+package controller
 
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"path/filepath"
 	"time"
-	"web_app/controller"
+	"web_app/pkg/oss"
 )
 
-func OSSUploadFile(c *gin.Context) {
+func UploadHandle(c *gin.Context) {
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
-		controller.ResponseError(c, controller.CodeServerBusy)
+		ResponseError(c, CodeServerBusy)
 		return
 	}
 	fileExt := filepath.Ext(fileHeader.Filename)
-	allowExts := []string{".jpg", ".png", ".gif", ".jpeg", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".pdf"}
+	allowExts := []string{".mp4", ".jpg", ".png", ".gif", ".jpeg", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".pdf"}
 	allowFlag := false
 	for _, ext := range allowExts {
 		if ext == fileExt {
@@ -24,7 +24,7 @@ func OSSUploadFile(c *gin.Context) {
 		}
 	}
 	if !allowFlag {
-		controller.ResponseError(c, controller.CodeServerBusy)
+		ResponseError(c, CodeServerBusy)
 		return
 	}
 
@@ -40,15 +40,16 @@ func OSSUploadFile(c *gin.Context) {
 
 	src, err := fileHeader.Open()
 	if err != nil {
-		controller.ResponseError(c, controller.CodeServerBusy)
+		ResponseError(c, CodeServerBusy)
 		return
 	}
 	defer src.Close()
 
-	res, err := OssUpload(fileKey, src)
+	res, err := oss.OssUpload(fileKey, src)
 	if err != nil {
-		controller.ResponseError(c, controller.CodeServerBusy)
+		ResponseError(c, CodeServerBusy)
 		return
 	}
-	controller.ResponseSuccess(c, res)
+	print(res)
+	ResponseSuccess(c, res)
 }

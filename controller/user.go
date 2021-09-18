@@ -33,6 +33,7 @@ func SignUpHandler(c *gin.Context) {
 
 	// 2. 业务处理
 	if err := logic.SignUp(p); err != nil {
+		print(err.Error())
 		if errors.Is(err, mysql.ErrorUserExist) {
 			ResponseError(c, CodeUserExist)
 			return

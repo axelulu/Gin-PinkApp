@@ -21,5 +21,5 @@ func OssUpload(key string, file io.Reader) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return settings.Conf.BucketPoint + "/" + key, nil
+	return key, nil
 }

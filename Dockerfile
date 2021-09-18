@@ -12,6 +12,8 @@ WORKDIR /build
 # 复制项目中的 go.mod 和 go.sum文件并下载依赖信息
 COPY go.mod .
 COPY go.sum .
+RUN go env -w GO111MODULE=on
+RUN go env -w GOPROXY=https://goproxy.io,direct
 RUN go mod download
 
 # 将代码复制到容器中
@@ -26,9 +28,9 @@ RUN go build -o web_app .
 FROM debian:stretch-slim
 
 COPY ./wait-for.sh /
-COPY ./templates /templates
-COPY ./static /static
-COPY ./conf /conf
+#COPY ./templates /templates
+#COPY ./static /static
+#COPY ./conf /conf
 
 # 从builder镜像中把/dist/app 拷贝到当前目录
 COPY --from=builder /build/web_app /
@@ -40,4 +42,4 @@ RUN set -eux; \
 		netcat; \
         chmod 755 wait-for.sh
 
-EXPOSE 8888
+EXPOSE 8080
