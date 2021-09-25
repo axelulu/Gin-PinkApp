@@ -58,15 +58,22 @@ func Login(user *models.User) (err error) {
 	return
 }
 
-func GetUserById(uid int64) (user *models.User, err error) {
-	user = new(models.User)
-	sqlStr := `select user_id, username, avatar, fans from user where user_id=?`
+func GetUserById(uid int64) (user *models.UserMeta, err error) {
+	user = new(models.UserMeta)
+	sqlStr := `select user_id, username, email, fans, follows, coin, phone, avatar, background, descr, exp, gender, is_vip, birth from user where user_id=?`
+	err = db.Get(user, sqlStr, uid)
+	return
+}
+
+func GetUserMetaById(uid int64) (user *models.UserMeta, err error) {
+	user = new(models.UserMeta)
+	sqlStr := `select user_id, username, email, fans, follows, coin, phone, avatar, background, descr, exp, gender, is_vip, birth from user where user_id=?`
 	err = db.Get(user, sqlStr, uid)
 	return
 }
 
 func GetUserByUserMeta(word string, page int64, size int64) (user []*models.User, err error) {
-	sqlStr := `select user_id, username, avatar, fans from user where username like '%` + word + `%' limit ?,?`
+	sqlStr := `select user_id, username, avatar, fans, follows, coin from user where username like '%` + word + `%' limit ?,?`
 	offset := (page - 1) * size
 	err = db.Select(&user, sqlStr, offset, size)
 	return

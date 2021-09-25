@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Home struct {
 	*PostCategoryList
@@ -25,6 +27,12 @@ type PostRankingList struct {
 	Size        int64  `json:"size" form:"size"`
 }
 
+type PostDynamicList struct {
+	DynamicSlug string `json:"dynamic" form:"dynamic"`
+	Page        int64  `json:"page" form:"page"`
+	Size        int64  `json:"size" form:"size"`
+}
+
 type Post struct {
 	PostId       int64     `json:"post_id" db:"post_id"`
 	AuthorId     int64     `json:"author_id" db:"author_id"`
@@ -35,6 +43,7 @@ type Post struct {
 	Reply        int64     `json:"reply" db:"reply"`
 	Favorite     int64     `json:"favorite" db:"favorite"`
 	Likes        int64     `json:"likes" db:"likes"`
+	UnLikes      int64     `json:"un_likes" db:"un_likes"`
 	Coin         int64     `json:"coin" db:"coin"`
 	Share        int64     `json:"share" db:"share"`
 	View         int64     `json:"view" db:"view"`
@@ -46,13 +55,12 @@ type Post struct {
 }
 
 type PostPublish struct {
-	PostType     string `json:"post_type" db:"post_type"`
+	PostType     string `json:"post_type" db:"post_type" validate:"oneof=post video dynamic"`
 	CategorySlug string `json:"category_slug" db:"category_slug"`
 	Title        string `json:"title" db:"title"`
 	Content      string `json:"content" db:"content"`
 	Cover        string `json:"cover" db:"cover"`
 	Download     string `json:"download" db:"download"`
-	Type         string `json:"type" db:"type"`
 	Video        string `json:"video" db:"video"`
 }
 

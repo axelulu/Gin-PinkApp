@@ -52,9 +52,28 @@ func Setup(mode string) *gin.Engine {
 		// 用户
 		v1.GET("/user/:id", controller.UserHandle)
 		v1.GET("/profile", controller.ProfileHandle)
+		v1.GET("/userCenter", controller.UserCenterHandle)
+
+		// 关注
+		v1.POST("/follow", controller.FollowHandle)
+		v1.POST("/unFollow", controller.UnFollowHandle)
+
+		// 喜欢
+		v1.POST("/like", controller.LikeHandle)
+		v1.POST("/unLike", controller.UnLikeHandle)
+
+		// 硬币
+		v1.POST("/coin", controller.CoinHandle)
+
+		// 收藏
+		v1.POST("/star", controller.StarHandle)
+		v1.POST("/unStar", controller.UnStarHandle)
 
 		// 排行
 		v1.GET("/ranking", controller.RankingHandle)
+
+		// 动态
+		v1.GET("/dynamic", controller.DynamicHandle)
 
 		// 搜索
 		v1.GET("/search", controller.SearchHandle)

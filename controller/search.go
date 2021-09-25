@@ -24,7 +24,6 @@ func SearchHandle(c *gin.Context) {
 	}
 
 	post, err := logic.Search(p)
-	print(post)
 	if err != nil {
 		zap.L().Error("logic.Search failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)

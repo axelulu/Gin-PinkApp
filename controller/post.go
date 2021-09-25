@@ -64,7 +64,15 @@ func PostByIdHandle(c *gin.Context) {
 		return
 	}
 
-	post, err := logic.PostById(pid)
+	uid, err := getCurrentUserID(c)
+	if err != nil {
+		// 记录日志
+		zap.L().Error("getCurrentUserID err", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+
+	post, err := logic.PostById(pid, uid)
 	if err != nil {
 		zap.L().Error("logic.PostById failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
@@ -120,6 +128,38 @@ func RankingHandle(c *gin.Context) {
 	}
 
 	post, err := logic.PostRanking(p)
+	if err != nil {
+		zap.L().Error("logic.PostRanking failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, post)
+}
+
+func DynamicHandle(c *gin.Context) {
+	// 1. 获取参数
+	p := new(models.PostDynamicList)
+	if err := c.ShouldBindQuery(&p); err != nil {
+		// 记录日志
+		zap.L().Error("PostDynamicList with invalid param", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			ResponseError(c, CodeInvalidParam)
+			return
+		}
+		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
+		return
+	}
+
+	uid, err := getCurrentUserID(c)
+	if err != nil {
+		// 记录日志
+		zap.L().Error("getCurrentUserID err", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+
+	post, err := logic.PostDynamic(p, uid)
 	if err != nil {
 		zap.L().Error("logic.PostRanking failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)

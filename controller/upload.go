@@ -50,6 +50,5 @@ func UploadHandle(c *gin.Context) {
 		ResponseError(c, CodeServerBusy)
 		return
 	}
-	print(res)
 	ResponseSuccess(c, res)
 }

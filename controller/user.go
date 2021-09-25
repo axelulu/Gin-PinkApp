@@ -33,7 +33,6 @@ func SignUpHandler(c *gin.Context) {
 
 	// 2. 业务处理
 	if err := logic.SignUp(p); err != nil {
-		print(err.Error())
 		if errors.Is(err, mysql.ErrorUserExist) {
 			ResponseError(c, CodeUserExist)
 			return
@@ -100,16 +99,34 @@ func UserHandle(c *gin.Context) {
 
 func ProfileHandle(c *gin.Context) {
 	// 1. 获取参数
-	pid, err := getCurrentUserID(c)
+	uid, err := getCurrentUserID(c)
 	if err != nil {
-		zap.L().Error("get post detail with invalid param", zap.Error(err))
+		zap.L().Error("get getCurrentUserID with invalid param", zap.Error(err))
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
 
-	user, err := logic.UserById(pid)
+	user, err := logic.UserById(uid)
 	if err != nil {
 		zap.L().Error("logic.UserById failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, user)
+}
+
+func UserCenterHandle(c *gin.Context) {
+	// 1. 获取参数
+	uid, err := getCurrentUserID(c)
+	if err != nil {
+		zap.L().Error("get getCurrentUserID with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	user, err := logic.UserCenterById(uid)
+	if err != nil {
+		zap.L().Error("logic.UserMetaById failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}
