@@ -30,9 +30,9 @@ func InsertContactItem(uid int64, sid int64) (res sql.Result, err error) {
 	return
 }
 
-func GetChatListByUserId(uid int64) (chat []*models.Message, err error) {
+func GetChatListByUserId(uid int64, sid int64) (chat []*models.Message, err error) {
 	sqlStr := `select user_id, send_id, cmd, media, content, update_time from chat where user_id=? or send_id=? order by update_time`
-	err = db.Select(&chat, sqlStr, uid, uid)
+	err = db.Select(&chat, sqlStr, uid, sid)
 	return
 }
 

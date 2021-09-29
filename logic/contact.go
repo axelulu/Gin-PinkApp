@@ -31,10 +31,10 @@ func AddContactList(uid int64, sid int64) (res sql.Result, err error) {
 	return
 }
 
-func GetChatList(uid int64) (chats map[string]interface{}, err error) {
+func GetChatList(uid int64, sid int64) (chats map[string]interface{}, err error) {
 	chats = make(map[string]interface{}, 2)
 	var chat []*models.Message
-	chat, err = mysql.GetChatListByUserId(uid)
+	chat, err = mysql.GetChatListByUserId(uid, sid)
 	chats["list"] = chat
 	chats["total"] = len(chat)
 	return

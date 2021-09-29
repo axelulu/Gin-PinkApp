@@ -41,7 +41,7 @@ func Setup(mode string) *gin.Engine {
 		// 聊天
 		v1.GET("/contactList", controller.ContactListHandle)
 		v1.POST("/contact", controller.ContactPublishHandle)
-		v1.GET("/chatList", controller.ChatListHandle)
+		v1.GET("/chatList/:id", controller.ChatListHandle)
 		v1.GET("/chat/:id", controller.Chat)
 
 		// 分类

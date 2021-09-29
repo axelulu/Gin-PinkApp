@@ -28,6 +28,14 @@ func ContactListHandle(c *gin.Context) {
 }
 
 func ChatListHandle(c *gin.Context) {
+	pidStr := c.Param("id")
+	sid, err := strconv.ParseInt(pidStr, 10, 64)
+	if err != nil {
+		zap.L().Error("get post detail with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
 	// 1. 获取参数
 	uid, err := getCurrentUserID(c)
 	if err != nil {
@@ -36,7 +44,7 @@ func ChatListHandle(c *gin.Context) {
 		return
 	}
 
-	user, err := logic.GetChatList(uid)
+	user, err := logic.GetChatList(uid, sid)
 	if err != nil {
 		zap.L().Error("logic.GetChatList failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
