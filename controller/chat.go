@@ -37,16 +37,12 @@ const (
 {id:1,userid:2,dstid:3,cmd:10,media:6,"content":"cry"}
 7、MEDIA_TYPE_Link 6
 {id:1,userid:2,dstid:3,cmd:10,media:7,"url":"http://www.a,com/dsturl.html"}
-
 7、MEDIA_TYPE_Link 6
 {id:1,userid:2,dstid:3,cmd:10,media:7,"url":"http://www.a,com/dsturl.html"}
-
 8、MEDIA_TYPE_VIDEO 8
 {id:1,userid:2,dstid:3,cmd:10,media:8,pic:"http://www.baidu.com/a/log,jpg",url:"http://www.a,com/a.mp4"}
-
 9、MEDIA_TYPE_CONTACT 9
 {id:1,userid:2,dstid:3,cmd:10,media:9,"content":"10086","pic":"http://www.baidu.com/a/avatar,jpg","memo":"胡大力"}
-
 */
 
 // Node 本核心在于形成userid和Node的映射关系
