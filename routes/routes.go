@@ -38,6 +38,12 @@ func Setup(mode string) *gin.Engine {
 	// 应用JWT认证中间件
 	v1.Use(middlewares.JWTAuthMiddleware())
 	{
+		// 聊天
+		v1.GET("/contactList", controller.ContactListHandle)
+		v1.POST("/contact", controller.ContactPublishHandle)
+		v1.GET("/chatList", controller.ChatListHandle)
+		v1.GET("/chat", controller.Chat)
+
 		// 分类
 		v1.GET("/categoryList", controller.CategoryListHandle)
 

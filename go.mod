@@ -19,6 +19,7 @@ require (
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/gorilla/websocket v1.4.2
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/juju/ratelimit v1.0.1
 	github.com/mailru/easyjson v0.7.7 // indirect
@@ -34,5 +35,6 @@ require (
 	golang.org/x/net v0.0.0-20210805182204-aaa1db679c0d // indirect
 	golang.org/x/sys v0.0.0-20210809222454-d867a43fc93e // indirect
 	golang.org/x/tools v0.1.5 // indirect
+	gopkg.in/fatih/set.v0 v0.2.1
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 )
