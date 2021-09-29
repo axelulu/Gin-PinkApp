@@ -9,8 +9,8 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strconv"
 	"sync"
-	"web_app/dao/mysql"
 	"web_app/logic"
 	"web_app/models"
 )
@@ -65,6 +65,14 @@ var rwlocker sync.RWMutex
 
 // Chat ws://127.0.0.1/chat?id=1&token=xxxx
 func Chat(c *gin.Context) {
+	pidStr := c.Param("id")
+	sid, err := strconv.ParseInt(pidStr, 10, 64)
+	if err != nil {
+		zap.L().Error("get post detail with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
 	//todo 检验接入是否合法
 	uid, err := getCurrentUserID(c)
 	if err != nil {
@@ -89,10 +97,11 @@ func Chat(c *gin.Context) {
 	//todo 获取用户全部群Id
 	//comIds := service.ContactService{}.SearchComunityIds(userId)
 	// 将全部消息列表加入到websocket
-	sendIds, err := mysql.GetContactListByUserId(uid)
-	for _, v := range sendIds {
-		node.GroupSets.Add(v.SendId)
-	}
+	//sendIds, err := mysql.GetContactListByUserId(uid)
+	//for _, v := range sendIds {
+	//	node.GroupSets.Add(v.SendId)
+	//}
+	node.GroupSets.Add(sid)
 	//todo userid和node形成绑定关系
 	rwlocker.Lock()
 	clientMap[uid] = node
