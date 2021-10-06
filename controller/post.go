@@ -167,3 +167,35 @@ func DynamicHandle(c *gin.Context) {
 	}
 	ResponseSuccess(c, post)
 }
+
+func UserPostHandle(c *gin.Context) {
+	// 1. 获取参数
+	p := new(models.UserPost)
+	if err := c.ShouldBindQuery(&p); err != nil {
+		// 记录日志
+		zap.L().Error("PostDynamicList with invalid param", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			ResponseError(c, CodeInvalidParam)
+			return
+		}
+		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
+		return
+	}
+
+	uid, err := getCurrentUserID(c)
+	if err != nil {
+		// 记录日志
+		zap.L().Error("getCurrentUserID err", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+
+	user, err := logic.GetUserPost(p, uid)
+	if err != nil {
+		zap.L().Error("logic.GetUserPost failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, user)
+}

@@ -11,7 +11,7 @@ func GetStarPostsById(pid int64, uid int64) (stars []*models.Star, err error) {
 	return
 }
 
-func GetStarsUserById(uid int64) (follows []*models.Star, err error) {
+func GetStarUserById(uid int64) (follows []*models.Star, err error) {
 	sqlStr := `select user_id, post_id from stars where user_id=?`
 	err = db.Select(&follows, sqlStr, uid)
 	return

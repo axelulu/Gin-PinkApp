@@ -130,6 +130,7 @@ func PostDynamic(p *models.PostDynamicList, uid int64) (posts map[string]interfa
 	for _, user := range follows {
 		uids = append(uids, user.FollowId)
 	}
+	uids = append(uids, uid)
 	post, err = mysql.GetPostDynamicByIds(uids, p.Size, p.Page, p.DynamicSlug)
 	postDetails = GetPostDetail(post)
 	posts["list"] = postDetails
@@ -231,6 +232,95 @@ func CoinPost(pid int64, uid int64, coin int64) (res sql.Result, err error) {
 	} else {
 		// 该文章未被投币
 		res, err = mysql.CoinPost(pid, uid, coin)
+	}
+	return
+}
+
+// GetUserPost 根据用户id与文章类型获取文章
+func GetUserPost(p *models.UserPost, uid int64) (posts map[string]interface{}, err error) {
+	var post []*models.Post
+	var postDetails []*models.PostDetail
+	posts = make(map[string]interface{}, 2)
+	if p.PostType == "star" {
+		posts["list"], posts["total"], err = GetStarPost(uid, p.Size, p.Page)
+	} else if p.PostType == "coin" {
+		posts["list"], posts["total"], err = GetCoinPost(uid, p.Size, p.Page)
+	} else if p.PostType == "like" {
+		posts["list"], posts["total"], err = GetLikePost(uid, p.Size, p.Page)
+	} else if p.PostType == "unlike" {
+		posts["list"], posts["total"], err = GetUnLikePost(uid, p.Size, p.Page)
+	} else {
+		post, err = mysql.GetPostByPostTypeAndUserID(p.PostType, p.UserId, p.Page, p.Size)
+		postDetails = GetPostDetail(post)
+		posts["list"] = postDetails
+		posts["total"] = len(postDetails)
+	}
+	return
+}
+
+func GetStarPost(uid int64, count int64, page int64) (starPostsDetails []*models.PostDetail, starPostCount int64, err error) {
+	var stars []*models.Star
+	stars, err = mysql.GetStarUserById(uid)
+	if len(stars) > 0 {
+		var starStr []int64
+		for _, star := range stars {
+			starStr = append(starStr, star.PostId)
+		}
+		var starPosts []*models.Post
+		starPosts, err = mysql.GetPostByIds(starStr, count, page)
+		starPostCount, _ = mysql.GetPostCountByIds(starStr)
+		starPostsDetails = GetPostDetail(starPosts)
+	} else {
+		starPostsDetails = nil
+		starPostCount = 0
+	}
+	return
+}
+
+func GetLikePost(uid int64, count int64, page int64) (likePostsDetails []*models.PostDetail, likePostCount int64, err error) {
+	var likes []*models.Like
+	likes, err = mysql.GetLikesUserById(uid)
+	if len(likes) > 0 {
+		var likeStr []int64
+		for _, like := range likes {
+			likeStr = append(likeStr, like.PostId)
+		}
+		var likePosts []*models.Post
+		likePosts, err = mysql.GetPostByIds(likeStr, count, page)
+		likePostCount, _ = mysql.GetPostCountByIds(likeStr)
+		likePostsDetails = GetPostDetail(likePosts)
+	}
+	return
+}
+
+func GetUnLikePost(uid int64, count int64, page int64) (unLikePostsDetails []*models.PostDetail, unLikePostCount int64, err error) {
+	var unLikes []*models.Like
+	unLikes, err = mysql.GetUnLikesUserById(uid)
+	if len(unLikes) > 0 {
+		var unLikeStr []int64
+		for _, unLike := range unLikes {
+			unLikeStr = append(unLikeStr, unLike.PostId)
+		}
+		var unLikePosts []*models.Post
+		unLikePosts, err = mysql.GetPostByIds(unLikeStr, count, page)
+		unLikePostCount, _ = mysql.GetPostCountByIds(unLikeStr)
+		unLikePostsDetails = GetPostDetail(unLikePosts)
+	}
+	return
+}
+
+func GetCoinPost(uid int64, count int64, page int64) (coinPostsDetails []*models.PostDetail, coinPostCount int64, err error) {
+	var coins []*models.Coin
+	coins, err = mysql.GetCoinsUserById(uid)
+	if len(coins) > 0 {
+		var coinStr []int64
+		for _, coin := range coins {
+			coinStr = append(coinStr, coin.PostId)
+		}
+		var coinPosts []*models.Post
+		coinPosts, err = mysql.GetPostByIds(coinStr, count, page)
+		coinPostCount, _ = mysql.GetPostCountByIds(coinStr)
+		coinPostsDetails = GetPostDetail(coinPosts)
 	}
 	return
 }

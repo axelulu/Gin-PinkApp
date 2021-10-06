@@ -14,7 +14,7 @@ func FollowHandle(c *gin.Context) {
 	p := new(models.FollowId)
 	if err := c.ShouldBindJSON(&p); err != nil {
 		// 记录日志
-		zap.L().Error("PostCategoryListHandle with invalid param", zap.Error(err))
+		zap.L().Error("FollowHandle with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
 			ResponseError(c, CodeInvalidParam)
@@ -45,6 +45,32 @@ func FollowHandle(c *gin.Context) {
 	msg, err := logic.FollowUser(fid, uid)
 	if err != nil {
 		zap.L().Error("logic.FollowUser failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, msg)
+}
+
+func FollowStatusHandle(c *gin.Context) {
+	// 1. 获取参数
+	pidStr := c.Param("id")
+	fid, err := strconv.ParseInt(pidStr, 10, 64)
+	if err != nil {
+		zap.L().Error("get post detail with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	uid, err := getCurrentUserID(c)
+	if err != nil {
+		zap.L().Error("get getCurrentUserID with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	msg, err := logic.FollowStatus(fid, uid)
+	if err != nil {
+		zap.L().Error("logic.FollowStatus failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}
@@ -279,6 +305,40 @@ func CoinHandle(c *gin.Context) {
 	msg, err := logic.CoinPost(pid, uid, coin)
 	if err != nil {
 		zap.L().Error("logic.CoinPost failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, msg)
+}
+
+func FollowListHandle(c *gin.Context) {
+	uid, err := getCurrentUserID(c)
+	if err != nil {
+		zap.L().Error("get getCurrentUserID with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	msg, err := logic.GetFansList(uid, false)
+	if err != nil {
+		zap.L().Error("logic.GetFollowList failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, msg)
+}
+
+func FansListHandle(c *gin.Context) {
+	uid, err := getCurrentUserID(c)
+	if err != nil {
+		zap.L().Error("get getCurrentUserID with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	msg, err := logic.GetFansList(uid, true)
+	if err != nil {
+		zap.L().Error("logic.GetFansList failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}

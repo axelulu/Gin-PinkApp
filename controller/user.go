@@ -117,14 +117,15 @@ func ProfileHandle(c *gin.Context) {
 
 func UserCenterHandle(c *gin.Context) {
 	// 1. 获取参数
-	uid, err := getCurrentUserID(c)
+	pidStr := c.Param("id")
+	pid, err := strconv.ParseInt(pidStr, 10, 64)
 	if err != nil {
-		zap.L().Error("get getCurrentUserID with invalid param", zap.Error(err))
+		zap.L().Error("get post detail with invalid param", zap.Error(err))
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
 
-	user, err := logic.UserCenterById(uid)
+	user, err := logic.UserCenterById(pid)
 	if err != nil {
 		zap.L().Error("logic.UserMetaById failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)

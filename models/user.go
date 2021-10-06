@@ -22,6 +22,13 @@ type ParamLogin struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type UserPost struct {
+	UserId   int64  `json:"user_id" form:"user_id"`
+	PostType string `json:"post_type" form:"post_type"`
+	Page     int64  `json:"page" form:"page"`
+	Size     int64  `json:"size" form:"size"`
+}
+
 type User struct {
 	UserID     int64     `json:"user_id" db:"user_id"`
 	Avatar     string    `json:"avatar" db:"avatar"`
@@ -52,4 +59,9 @@ type UserMeta struct {
 	Birth      time.Time `json:"birth" db:"birth"`
 	IsVip      time.Time `json:"is_vip" db:"is_vip"`
 	Active     int       `json:"active"`
+}
+
+type FansMeta struct {
+	IsFollow bool
+	UserMeta *UserMeta
 }

@@ -58,11 +58,15 @@ func Setup(mode string) *gin.Engine {
 		// 用户
 		v1.GET("/user/:id", controller.UserHandle)
 		v1.GET("/profile", controller.ProfileHandle)
-		v1.GET("/userCenter", controller.UserCenterHandle)
+		v1.GET("/userCenter/:id", controller.UserCenterHandle)
+		v1.GET("/userPost", controller.UserPostHandle)
 
 		// 关注
 		v1.POST("/follow", controller.FollowHandle)
+		v1.GET("/followStatus/:id", controller.FollowStatusHandle)
 		v1.POST("/unFollow", controller.UnFollowHandle)
+		v1.GET("/followList", controller.FollowListHandle)
+		v1.GET("/fansList", controller.FansListHandle)
 
 		// 喜欢
 		v1.POST("/like", controller.LikeHandle)

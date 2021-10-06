@@ -96,6 +96,13 @@ func GetAllPostByPostMeta(word string, page int64, size int64) (post []*models.P
 	return
 }
 
+func GetPostByPostTypeAndUserID(postType string, userId int64, page int64, size int64) (post []*models.Post, err error) {
+	sqlStr := `select post_id, author_id, post_type, category_slug, title, content, reply, favorite, likes, un_likes, coin, share, view, cover, video, download, create_time, update_time from post where author_id=? and post_type=? limit ?,?`
+	offset := (page - 1) * size
+	err = db.Select(&post, sqlStr, userId, postType, offset, size)
+	return
+}
+
 func CreatePost(postId int64, authorId int64, postType string, categorySlug string, title string, cover string, content string, video string) (exec sql.Result, err error) {
 	sqlStr := `insert into post (post_id,author_id,post_type,category_slug,title,cover,content,video) values(?,?,?,?,?,?,?,?)`
 	exec, err = db.Exec(sqlStr, postId, authorId, postType, categorySlug, title, cover, content, video)

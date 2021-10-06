@@ -17,6 +17,12 @@ func GetFollowsUserById(uid int64) (follows []*models.Follow, err error) {
 	return
 }
 
+func GetFollowsUserByFollowId(uid int64) (follows []*models.Follow, err error) {
+	sqlStr := `select user_id,follow_id from follow where follow_id=?`
+	err = db.Select(&follows, sqlStr, uid)
+	return
+}
+
 func DeleteFollowUserById(followId int64, uid int64) (res sql.Result, err error) {
 	// 查询关注数量
 	sqlStr4 := `select user_id,follow_id from follow where user_id=?`
