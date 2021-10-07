@@ -29,6 +29,11 @@ type UserPost struct {
 	Size     int64  `json:"size" form:"size"`
 }
 
+type UserUpdate struct {
+	Slug  string `json:"slug" form:"slug" binding:"required" validate:"oneof=avatar background username gender"`
+	Value string `json:"value" form:"value" binding:"required"`
+}
+
 type User struct {
 	UserID     int64     `json:"user_id" db:"user_id"`
 	Avatar     string    `json:"avatar" db:"avatar"`

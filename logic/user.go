@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"database/sql"
 	"web_app/dao/mysql"
 	"web_app/models"
 	"web_app/pkg/jwt"
@@ -80,5 +81,10 @@ func UserCenterById(uid int64) (userCenter map[string]interface{}, err error) {
 	userCenter["unLikePosts"], userCenter["unLikePostCount"], err = GetUnLikePost(uid, 2, 1)
 	// 投币
 	userCenter["coinPosts"], userCenter["coinPostCount"], err = GetCoinPost(uid, 2, 1)
+	return
+}
+
+func UserInfoUpdate(uid int64, p *models.UserUpdate) (res sql.Result, err error) {
+	res, err = mysql.UpdateUserInfo(uid, p.Slug, p.Value)
 	return
 }

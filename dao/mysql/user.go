@@ -78,3 +78,9 @@ func GetUserByUserMeta(word string, page int64, size int64) (user []*models.User
 	err = db.Select(&user, sqlStr, offset, size)
 	return
 }
+
+func UpdateUserInfo(uid int64, slugType string, slugVal string) (res sql.Result, err error) {
+	sqlStr := "update user set " + slugType + "=? where user_id = ?"
+	res, err = db.Exec(sqlStr, slugVal, uid)
+	return
+}

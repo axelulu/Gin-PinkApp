@@ -60,6 +60,7 @@ func Setup(mode string) *gin.Engine {
 		v1.GET("/profile", controller.ProfileHandle)
 		v1.GET("/userCenter/:id", controller.UserCenterHandle)
 		v1.GET("/userPost", controller.UserPostHandle)
+		v1.POST("/userInfoUpdate", controller.UserInfoUpdateHandle)
 
 		// 关注
 		v1.POST("/follow", controller.FollowHandle)

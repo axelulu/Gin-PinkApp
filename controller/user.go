@@ -133,3 +133,34 @@ func UserCenterHandle(c *gin.Context) {
 	}
 	ResponseSuccess(c, user)
 }
+
+func UserInfoUpdateHandle(c *gin.Context) {
+	// 1. 获取参数
+	p := new(models.UserUpdate)
+	if err := c.ShouldBindJSON(&p); err != nil {
+		// 记录日志
+		zap.L().Error("PostDynamicList with invalid param", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			ResponseError(c, CodeInvalidParam)
+			return
+		}
+		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
+		return
+	}
+
+	uid, err := getCurrentUserID(c)
+	if err != nil {
+		zap.L().Error("get getCurrentUserID with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	user, err := logic.UserInfoUpdate(uid, p)
+	if err != nil {
+		zap.L().Error("logic.UserMetaById failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, user)
+}
