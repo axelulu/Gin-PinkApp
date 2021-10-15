@@ -52,6 +52,10 @@ func Setup(mode string) *gin.Engine {
 		v1.POST("/post", controller.PostPublishHandle)
 		v1.GET("/post/:id", controller.PostByIdHandle)
 
+		// 评论
+		v1.POST("/comment", controller.CommentCreateHandle)
+		v1.GET("/commentList", controller.CommentListHandle)
+
 		// 首页
 		v1.GET("/home", controller.HomeHandle)
 
