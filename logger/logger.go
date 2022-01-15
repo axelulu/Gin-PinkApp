@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"os"
+	"pinkacg/settings"
 	"runtime/debug"
 	"strings"
 	"time"
-	"web_app/settings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/natefinch/lumberjack"

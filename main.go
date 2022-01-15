@@ -7,15 +7,15 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"pinkacg/controller"
+	"pinkacg/dao/mysql"
+	"pinkacg/dao/redis"
+	"pinkacg/logger"
+	"pinkacg/pkg/snowflake"
+	"pinkacg/routes"
+	"pinkacg/settings"
 	"syscall"
 	"time"
-	"web_app/controller"
-	"web_app/dao/mysql"
-	"web_app/dao/redis"
-	"web_app/logger"
-	"web_app/pkg/snowflake"
-	"web_app/routes"
-	"web_app/settings"
 
 	"go.uber.org/zap"
 )
@@ -53,6 +53,10 @@ func main() {
 	}
 	defer zap.L().Sync()
 	zap.L().Debug("logger init success...")
+
+	logger.InitClickLogger(settings.Conf.LogConfig, settings.Conf.Mode)
+	defer zap.L().Sync()
+	zap.L().Debug("click_logger init success...")
 
 	// 3. 初始化MySql连接
 	if err := mysql.Init(settings.Conf.MySqlConfig); err != nil {

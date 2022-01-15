@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"database/sql"
-	"web_app/models"
+	"pinkacg/models"
 )
 
 func GetStarPostsById(pid int64, uid int64) (stars []*models.Star, err error) {
@@ -23,19 +23,29 @@ func StarPost(pid int64, uid int64) (res sql.Result, err error) {
 	var starsNum []*models.Star
 	sqlStr2 := `select user_id, post_id from stars where post_id=?`
 	err = db.Select(&starsNum, sqlStr2, pid)
+	if err != nil {
+		return nil, err
+	}
 
 	// 开启事务
 	tx, err := db.Begin()
-	sqlStr := `insert into stars (user_id, post_id) values(?,?)`
+	if err != nil {
+		return nil, err
+	}
+	sqlStr := `insert into stars (user_id, post_id,update_time,create_time) values(?,?,NOW(),NOW())`
 	res, err = tx.Exec(sqlStr, uid, pid)
 	if err != nil {
-		err = tx.Rollback()
+		if err = tx.Rollback(); err != nil {
+			return nil, err
+		}
 	}
 
-	sqlStr3 := `update post set favorite=? where post_id=?`
+	sqlStr3 := `update posts set favorite=?,update_time=NOW() where post_id=?`
 	res, err = tx.Exec(sqlStr3, len(starsNum)+1, pid)
 	if err != nil {
-		err = tx.Rollback()
+		if err = tx.Rollback(); err != nil {
+			return nil, err
+		}
 	}
 
 	// 提交事务
@@ -53,16 +63,23 @@ func UnStarPost(pid int64, uid int64) (res sql.Result, err error) {
 
 	// 开启事务
 	tx, err := db.Begin()
+	if err != nil {
+		return nil, err
+	}
 	sqlStr := `delete from stars where post_id=? and user_id=?`
 	res, err = tx.Exec(sqlStr, pid, uid)
 	if err != nil {
-		err = tx.Rollback()
+		if err = tx.Rollback(); err != nil {
+			return nil, err
+		}
 	}
 
-	sqlStr3 := `update post set favorite=? where post_id=?`
+	sqlStr3 := `update posts set favorite=?,update_time=NOW() where post_id=?`
 	res, err = tx.Exec(sqlStr3, len(unStarsNum)-1, pid)
 	if err != nil {
-		err = tx.Rollback()
+		if err = tx.Rollback(); err != nil {
+			return nil, err
+		}
 	}
 
 	// 提交事务

@@ -1,9 +1,9 @@
 package middlewares
 
 import (
+	"pinkacg/controller"
+	"pinkacg/pkg/jwt"
 	"strings"
-	"web_app/controller"
-	"web_app/pkg/jwt"
 
 	"github.com/gin-gonic/gin"
 )

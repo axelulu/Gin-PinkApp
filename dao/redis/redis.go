@@ -2,7 +2,7 @@ package redis
 
 import (
 	"fmt"
-	"web_app/settings"
+	"pinkacg/settings"
 
 	"github.com/go-redis/redis"
 )

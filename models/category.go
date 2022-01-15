@@ -5,6 +5,6 @@ type CategoryList struct {
 }
 
 type Category struct {
-	CategorySlug string `json:"category_slug" db:"category_slug"`
+	CategorySlug int64  `json:"category_id" db:"category_id"`
 	CategoryName string `json:"category_name" db:"category_name"`
 }

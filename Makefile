@@ -1,6 +1,6 @@
 .PHONY: all build run gotool clean help
 
-BINARY="web_app"
+BINARY="pinkacg"
 
 all: gotool build
 

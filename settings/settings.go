@@ -16,6 +16,8 @@ type AppConfig struct {
 	Name          string `mapstructure:"name"`
 	Mode          string `mapstructure:"mode"`
 	Version       string `mapstructure:"version"`
+	VideoSize     int64  `mapstructure:"video_size"`
+	PicSize       int64  `mapstructure:"pic_size"`
 	StartTime     string `mapstructure:"start_time"`
 	MachineId     int64  `mapstructure:"machine_id"`
 	RateLimitTime int64  `mapstructure:"rate_limit_time"`
@@ -27,6 +29,7 @@ type AppConfig struct {
 	*MySqlConfig `mapstructure:"mysql"`
 	*RedisConfig `mapstructure:"redis"`
 	*OssConfig   `mapstructure:"oss"`
+	*EmailConfig `mapstructure:"email"`
 }
 
 // AuthConfig jwt配置
@@ -36,11 +39,12 @@ type AuthConfig struct {
 
 // LogConfig 日志配置
 type LogConfig struct {
-	Level      string `mapstructure:"level"`
-	Filename   string `mapstructure:"filename"`
-	MaxSize    int    `mapstructure:"max_size"`
-	MaxAge     int    `mapstructure:"max_age"`
-	MaxBackups int    `mapstructure:"max_backups"`
+	Level             string `mapstructure:"level"`
+	Filename          string `mapstructure:"filename"`
+	UserClickFilename string `mapstructure:"userClickFileName"`
+	MaxSize           int    `mapstructure:"max_size"`
+	MaxAge            int    `mapstructure:"max_age"`
+	MaxBackups        int    `mapstructure:"max_backups"`
 }
 
 // MySqlConfig mysql配置
@@ -70,6 +74,15 @@ type OssConfig struct {
 	AccessKeySecret string `mapstructure:"access_key_secret"`
 	BucketName      string `mapstructure:"bucket_name"`
 	BucketPoint     string `mapstructure:"bucket_point"`
+}
+
+// EmailConfig oss配置
+type EmailConfig struct {
+	User       string `mapstructure:"user"`
+	Username   string `mapstructure:"username"`
+	Password   string `mapstructure:"password"`
+	Host       string `mapstructure:"host"`
+	ReplyEmail string `mapstructure:"reply_email"`
 }
 
 func Init(filename string) (err error) {

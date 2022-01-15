@@ -1,8 +1,8 @@
 package logic
 
 import (
-	"web_app/dao/mysql"
-	"web_app/models"
+	"pinkacg/dao/mysql"
+	"pinkacg/models"
 )
 
 func GetUpdate() (version *models.Update, err error) {

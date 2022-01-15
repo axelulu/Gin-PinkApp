@@ -4,16 +4,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
+	"pinkacg/logic"
+	"pinkacg/models"
 	"strconv"
-	"web_app/logic"
-	"web_app/models"
 )
 
+// HomeHandle 首页文章列表
 func HomeHandle(c *gin.Context) {
+	// 获取参数
 	p := new(models.Home)
 	if err := c.ShouldBindQuery(&p); err != nil {
 		// 记录日志
-		zap.L().Error("HomeHandle with invalid param", zap.Error(err))
+		zap.L().Error("models.Home with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
 			ResponseError(c, CodeInvalidParam)
@@ -22,6 +24,8 @@ func HomeHandle(c *gin.Context) {
 		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
 		return
 	}
+
+	// 逻辑处理
 	home, err := logic.HomeList(p)
 	if err != nil {
 		zap.L().Error("logic.HomeList failed", zap.Error(err))
@@ -31,11 +35,13 @@ func HomeHandle(c *gin.Context) {
 	ResponseSuccess(c, home)
 }
 
+// PostCategoryListHandle 分类文章列表
 func PostCategoryListHandle(c *gin.Context) {
+	// 获取参数
 	p := new(models.PostCategoryList)
 	if err := c.ShouldBindJSON(&p); err != nil {
 		// 记录日志
-		zap.L().Error("PostCategoryListHandle with invalid param", zap.Error(err))
+		zap.L().Error("models.PostCategoryList with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
 			ResponseError(c, CodeInvalidParam)
@@ -45,6 +51,7 @@ func PostCategoryListHandle(c *gin.Context) {
 		return
 	}
 
+	// 逻辑处理
 	post, err := logic.PostCategoryList(p)
 	if err != nil {
 		zap.L().Error("logic.PostCategoryList failed", zap.Error(err))
@@ -54,24 +61,52 @@ func PostCategoryListHandle(c *gin.Context) {
 	ResponseSuccess(c, post)
 }
 
+// PostListByIdsHandle 根据用户ids获取文章列表
+func PostListByIdsHandle(c *gin.Context) {
+	// 获取参数
+	p := new(models.PostListByIds)
+	if err := c.ShouldBindQuery(&p); err != nil {
+		// 记录日志
+		zap.L().Error("models.PostListByIds with invalid param", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			ResponseError(c, CodeInvalidParam)
+			return
+		}
+		ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
+		return
+	}
+
+	// 逻辑处理
+	post, err := logic.PostListByIds(p)
+	if err != nil {
+		zap.L().Error("logic.PostListByIds failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, post)
+}
+
+// PostByIdHandle 根据用户ID获取文章
 func PostByIdHandle(c *gin.Context) {
-	// 1. 获取参数
+	// 获取参数
 	pidStr := c.Param("id")
 	pid, err := strconv.ParseInt(pidStr, 10, 64)
 	if err != nil {
-		zap.L().Error("get post detail with invalid param", zap.Error(err))
+		zap.L().Error("id with invalid param", zap.Error(err))
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
 
+	// 获取用户ID
 	uid, err := getCurrentUserID(c)
 	if err != nil {
-		// 记录日志
-		zap.L().Error("getCurrentUserID err", zap.Error(err))
-		ResponseError(c, CodeServerBusy)
+		zap.L().Error("getCurrentUserID with invalid param", zap.Error(err))
+		ResponseError(c, CodeCurrentUser)
 		return
 	}
 
+	// 逻辑处理
 	post, err := logic.PostById(pid, uid)
 	if err != nil {
 		zap.L().Error("logic.PostById failed", zap.Error(err))
@@ -81,11 +116,34 @@ func PostByIdHandle(c *gin.Context) {
 	ResponseSuccess(c, post)
 }
 
-func PostPublishHandle(c *gin.Context) {
+// PostViewByIdHandle 增加文章观看数
+func PostViewByIdHandle(c *gin.Context) {
+	// 获取参数
+	pidStr := c.Param("id")
+	pid, err := strconv.ParseInt(pidStr, 10, 64)
+	if err != nil {
+		zap.L().Error("id with invalid param", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+
+	// 逻辑处理
+	err = logic.PostViewById(pid)
+	if err != nil {
+		zap.L().Error("logic.PostViewById failed", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, nil)
+}
+
+// PostCreateHandle 文章创建
+func PostCreateHandle(c *gin.Context) {
+	// 获取参数
 	p := new(models.PostPublish)
 	if err := c.ShouldBindJSON(&p); err != nil {
 		// 记录日志
-		zap.L().Error("PostCategoryListHandle with invalid param", zap.Error(err))
+		zap.L().Error("models.PostPublish with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
 			ResponseError(c, CodeInvalidParam)
@@ -95,15 +153,16 @@ func PostPublishHandle(c *gin.Context) {
 		return
 	}
 
-	authorId, err := getCurrentUserID(c)
+	// 获取用户ID
+	uid, err := getCurrentUserID(c)
 	if err != nil {
-		// 记录日志
-		zap.L().Error("getCurrentUserID err", zap.Error(err))
-		ResponseError(c, CodeServerBusy)
+		zap.L().Error("getCurrentUserID with invalid param", zap.Error(err))
+		ResponseError(c, CodeCurrentUser)
 		return
 	}
 
-	exec, err := logic.PostPublish(p, authorId)
+	// 逻辑处理
+	exec, err := logic.PostPublish(p, uid)
 	if err != nil {
 		zap.L().Error("logic.PostPublish failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
@@ -112,12 +171,13 @@ func PostPublishHandle(c *gin.Context) {
 	ResponseSuccess(c, exec)
 }
 
+// RankingHandle 文章排行榜
 func RankingHandle(c *gin.Context) {
-	// 1. 获取参数
+	// 获取参数
 	p := new(models.PostRankingList)
 	if err := c.ShouldBindQuery(&p); err != nil {
 		// 记录日志
-		zap.L().Error("RankingHandle with invalid param", zap.Error(err))
+		zap.L().Error("models.PostRankingList with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
 			ResponseError(c, CodeInvalidParam)
@@ -127,6 +187,7 @@ func RankingHandle(c *gin.Context) {
 		return
 	}
 
+	// 逻辑处理
 	post, err := logic.PostRanking(p)
 	if err != nil {
 		zap.L().Error("logic.PostRanking failed", zap.Error(err))
@@ -136,12 +197,13 @@ func RankingHandle(c *gin.Context) {
 	ResponseSuccess(c, post)
 }
 
+// DynamicHandle 动态文章
 func DynamicHandle(c *gin.Context) {
-	// 1. 获取参数
+	// 获取参数
 	p := new(models.PostDynamicList)
 	if err := c.ShouldBindQuery(&p); err != nil {
 		// 记录日志
-		zap.L().Error("PostDynamicList with invalid param", zap.Error(err))
+		zap.L().Error("models.PostDynamicList with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
 			ResponseError(c, CodeInvalidParam)
@@ -151,29 +213,31 @@ func DynamicHandle(c *gin.Context) {
 		return
 	}
 
+	// 获取用户ID
 	uid, err := getCurrentUserID(c)
 	if err != nil {
-		// 记录日志
-		zap.L().Error("getCurrentUserID err", zap.Error(err))
-		ResponseError(c, CodeServerBusy)
+		zap.L().Error("getCurrentUserID with invalid param", zap.Error(err))
+		ResponseError(c, CodeCurrentUser)
 		return
 	}
 
+	// 逻辑处理
 	post, err := logic.PostDynamic(p, uid)
 	if err != nil {
-		zap.L().Error("logic.PostRanking failed", zap.Error(err))
+		zap.L().Error("logic.PostDynamic failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}
 	ResponseSuccess(c, post)
 }
 
+// UserPostHandle 用户文章列表
 func UserPostHandle(c *gin.Context) {
-	// 1. 获取参数
+	// 获取参数
 	p := new(models.UserPost)
 	if err := c.ShouldBindQuery(&p); err != nil {
 		// 记录日志
-		zap.L().Error("PostDynamicList with invalid param", zap.Error(err))
+		zap.L().Error("models.UserPost with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
 			ResponseError(c, CodeInvalidParam)
@@ -183,14 +247,15 @@ func UserPostHandle(c *gin.Context) {
 		return
 	}
 
+	// 获取用户ID
 	uid, err := getCurrentUserID(c)
 	if err != nil {
-		// 记录日志
-		zap.L().Error("getCurrentUserID err", zap.Error(err))
-		ResponseError(c, CodeServerBusy)
+		zap.L().Error("getCurrentUserID with invalid param", zap.Error(err))
+		ResponseError(c, CodeCurrentUser)
 		return
 	}
 
+	// 逻辑处理
 	user, err := logic.GetUserPost(p, uid)
 	if err != nil {
 		zap.L().Error("logic.GetUserPost failed", zap.Error(err))

@@ -3,6 +3,10 @@ name: "pink"
 # 分为dev模式与release模式
 mode: "dev"
 port: 8080
+# 文件上传
+video_size: 100
+pic_size: 1
+# 雪花算法
 start_time: "2006-01-02"
 machine_id: 1
 # 每几秒钟放多少令牌
@@ -15,16 +19,17 @@ auth:
 
 log:
   level: "debug"
-  filename: "pink.log"
-  max_size: 200
+  filename: "logs/system/pink.log"
+  userClickFileName: "logs/user_click/"
+  max_size: 100
   max_age: 30
-  max_backups: 7
+  max_backups: 10
 
 mysql:
   host: "127.0.0.1"
   port: 3306
   user: "root"
-  password: "123456"
+  password: "zhaolu123"
   dbname: "pink"
   max_open_conns: 100
   max_idle_conns: 10
@@ -42,3 +47,10 @@ oss:
   access_key_secret: "nKAwGDBsC5m9k1lKdoTz6ILq7zOrmP"
   bucket_name: "otakusns"
   bucket_point: "https://img.catacg.cn"
+
+email:
+  user: "admin@otakusns.com"
+  username: "PinkAcg"
+  password: "otakusnsAB12"
+  host: "smtpdm.aliyun.com"
+  reply_email: "izhaicy@163.com"
