@@ -42,15 +42,15 @@ redis:
   pool_size: 200
 
 oss:
-  endpoint: "oss-cn-shanghai.aliyuncs.com"
-  access_key_id: "LTAIOMvPwf7V3QRT"
-  access_key_secret: "nKAwGDBsC5m9k1lKdoTz6ILq7zOrmP"
-  bucket_name: "otakusns"
-  bucket_point: "https://img.catacg.cn"
+  endpoint: "oss-cn-sh12anghai.aliyu12ncs.com"
+  access_key_id: ""
+  access_key_secret: ""
+  bucket_name: ""
+  bucket_point: ""
 
 email:
   user: "admin@otakusns.com"
-  username: "PinkAcg"
-  password: "otakusnsAB12"
+  username: ""
+  password: ""
   host: "smtpdm.aliyun.com"
   reply_email: "izhaicy@163.com"
