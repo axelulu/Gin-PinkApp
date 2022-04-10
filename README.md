@@ -1,5 +1,9 @@
-# flutter_pink
+# PinkApp-Gin
 
-需要搭配后端使用：https://github.com/poem-code/golang-pinkacg
 
-flutter-pinkacg/lib/util/hi_constants.dart  为配置文件
+#### 加QQ群进行交流：829704922
+
+这是PinkApp的后端文件
+
+需要搭配前端使用：https://github.com/poem-code/Getx-PinkApp
+
