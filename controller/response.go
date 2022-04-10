@@ -12,6 +12,7 @@ type ResponseData struct {
 	Data interface{} `json:"data,omitempty"`
 }
 
+// ResponseError 错误
 func ResponseError(c *gin.Context, code ResCode) {
 	c.JSON(http.StatusOK, &ResponseData{
 		Code: code,
@@ -20,6 +21,7 @@ func ResponseError(c *gin.Context, code ResCode) {
 	})
 }
 
+// ResponseErrorWithMsg 错误信息
 func ResponseErrorWithMsg(c *gin.Context, code ResCode, msg interface{}) {
 	c.JSON(http.StatusOK, &ResponseData{
 		Code: code,
@@ -28,6 +30,7 @@ func ResponseErrorWithMsg(c *gin.Context, code ResCode, msg interface{}) {
 	})
 }
 
+// ResponseSuccess 成功
 func ResponseSuccess(c *gin.Context, data interface{}) {
 	c.JSON(http.StatusOK, &ResponseData{
 		Code: CodeSuccess,

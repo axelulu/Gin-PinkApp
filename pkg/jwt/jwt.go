@@ -2,8 +2,8 @@ package jwt
 
 import (
 	"errors"
+	"pinkacg/settings"
 	"time"
-	"web_app/settings"
 
 	"github.com/dgrijalva/jwt-go"
 )

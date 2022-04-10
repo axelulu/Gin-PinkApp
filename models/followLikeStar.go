@@ -35,6 +35,6 @@ type Coin struct {
 }
 
 type CoinId struct {
-	PostId string `json:"post_id" db:"post_id"`
-	Coin   string `json:"coin" db:"coin" validate:"oneof=coin 1 2"`
+	PostId string `json:"post_id" form:"post_id"`
+	Coin   string `json:"coin" form:"coin" binding:"oneof=coin 1 2"`
 }

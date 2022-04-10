@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"fmt"
-	"web_app/settings"
+	"pinkacg/settings"
 
 	"go.uber.org/zap"
 
@@ -13,7 +13,7 @@ import (
 var db *sqlx.DB
 
 func Init(cfg *settings.MySqlConfig) (err error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&time_zone=PRC",
 		cfg.User,
 		cfg.Password,
 		cfg.Host,

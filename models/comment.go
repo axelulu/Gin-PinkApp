@@ -9,7 +9,7 @@ type Comment struct {
 	Type       string    `json:"type" db:"type"`
 	Parent     int64     `json:"parent" db:"parent"`
 	LikeNum    int64     `json:"like_num" db:"like_num"`
-	UpdateTime time.Time `json:"updated_time" db:"updated_time"`
+	UpdateTime time.Time `json:"update_time" db:"update_time"`
 }
 
 type CommentCreate struct {

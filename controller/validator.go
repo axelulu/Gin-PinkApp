@@ -2,9 +2,9 @@ package controller
 
 import (
 	"fmt"
+	"pinkacg/models"
 	"reflect"
 	"strings"
-	"web_app/models"
 
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"

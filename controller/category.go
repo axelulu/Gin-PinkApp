@@ -1,19 +1,22 @@
 package controller
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
-	"web_app/logic"
-	"web_app/models"
+	"pinkacg/dao/mysql"
+	"pinkacg/logic"
+	"pinkacg/models"
 )
 
+// CategoryListHandle 获取所有分类
 func CategoryListHandle(c *gin.Context) {
-	//参数校验
+	// 获取参数
 	p := new(models.CategoryList)
 	if err := c.ShouldBindQuery(&p); err != nil {
 		// 记录日志
-		zap.L().Error("SignUp with invalid param", zap.Error(err))
+		zap.L().Error("models.CategoryList with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
 			ResponseError(c, CodeInvalidParam)
@@ -26,13 +29,13 @@ func CategoryListHandle(c *gin.Context) {
 	//逻辑处理
 	category, err := logic.CategoryList(p)
 	if err != nil {
-		zap.L().Error("logic.CategoryLis failed", zap.Error(err))
+		zap.L().Error("logic.CategoryList failed", zap.Error(err))
+		if errors.Is(err, mysql.ErrorCatEmpty) {
+			ResponseError(c, CodeCatEmpty)
+			return
+		}
 		ResponseError(c, CodeServerBusy)
 		return
 	}
 	ResponseSuccess(c, category)
-}
-
-func AddCategoryHandle(c *gin.Context) {
-
 }

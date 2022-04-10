@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+// 指定golang包名
+option go_package = "/user_reco";
+
+message User {
+  string user_id = 1;
+  int32 category_id = 2;
+  int32 article_num = 3;
+  int64 time_stamp = 4;
+}
+// int32 ---> int64 post_id
+message Article {
+  int64 post_id = 1;
+  int32 article_num = 2;
+}
+
+message param2 {
+  string click = 1;
+  string collect = 2;
+  string share = 3;
+  string read = 4;
+}
+
+message param1 {
+  int64 post_id = 1;
+  param2 params = 2;
+}
+
+message Track {
+  string exposure = 1;
+  repeated param1 recommends = 2;
+  int64 time_stamp = 3;
+}
+
+message Similar {
+  repeated int64 post_id = 1;
+}
+
+service UserRecommend {
+  // feed recommend
+  rpc user_recommend(User) returns (Track) {}
+  rpc article_recommend(Article) returns(Similar) {}
+}

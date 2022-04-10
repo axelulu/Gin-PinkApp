@@ -20,7 +20,7 @@ RUN go mod download
 COPY . .
 
 # 将我们的代码编译成二进制可执行文件 bubble
-RUN go build -o web_app .
+RUN go build -o pinkacg .
 
 ###################
 # 接下来创建一个小镜像
@@ -33,7 +33,7 @@ COPY ./wait-for.sh /
 #COPY ./conf /conf
 
 # 从builder镜像中把/dist/app 拷贝到当前目录
-COPY --from=builder /build/web_app /
+COPY --from=builder /build/pinkacg /
 
 RUN set -eux; \
 	apt-get update; \

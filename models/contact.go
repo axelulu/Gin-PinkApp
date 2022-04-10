@@ -12,9 +12,16 @@ type Contact struct {
 	UpdateTime time.Time `json:"update_time" db:"update_time"`
 }
 
+type ChatList struct {
+	Page int64 `json:"page" form:"page"`
+	Size int64 `json:"size" form:"size"`
+	Sid  int64 `json:"sid" form:"sid"`
+}
+
 type ContactDetail struct {
 	UserId       int64       `json:"user_id" db:"user_id"`
 	SendId       int64       `json:"send_id" db:"send_id"`
+	Msg          interface{} `json:"msg" db:"msg"`
 	SendUserMeta interface{} `json:"send_user_meta"`
 	UpdateTime   time.Time   `json:"update_time" db:"update_time"`
 }
@@ -30,5 +37,5 @@ type Message struct {
 	Url        string    `json:"url,omitempty" form:"url" db:"url"`             //服务的URL
 	Memo       string    `json:"memo,omitempty" form:"memo" db:"memo"`          //简单描述
 	Amount     int       `json:"amount,omitempty" form:"amount" db:"amount"`    //其他和数字相关的
-	UpdateTime time.Time `json:"update_time" db:"update_time"`
+	UpdateTime time.Time `json:"update_time,omitempty" db:"update_time"`
 }
