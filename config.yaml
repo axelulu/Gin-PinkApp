@@ -43,14 +43,14 @@ redis:
 
 oss:
   endpoint: "oss-cn-shanghai.aliyuncs.com"
-  access_key_id: "LTAIOMvPwf7V3QRT"
-  access_key_secret: "nKAwGDBsC5m9k1lKdoTz6ILq7zOrmP"
+  access_key_id: ""
+  access_key_secret: ""
   bucket_name: "otakusns"
   bucket_point: "https://img.catacg.cn"
 
 email:
   user: "admin@otakusns.com"
-  username: "PinkAcg"
-  password: "bossSHELL12"
+  username: ""
+  password: ""
   host: "smtpdm.aliyun.com"
   reply_email: "izhaicy@163.com"
